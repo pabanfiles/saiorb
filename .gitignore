@@ -6,4 +6,7 @@ node_modules
 .env*.local
 .env.production
 *.log
-.DS_Store
+.DS_Store 
+# Bun lockfile (use npm instead)
+bun.lock
+bun.lockb
