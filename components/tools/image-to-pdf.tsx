@@ -19,8 +19,7 @@ export default function ImageToPdfTool() {
       page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
     }
     const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: "application/pdf" });
-    setPdfUrl(URL.createObjectURL(blob));
+const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });    setPdfUrl(URL.createObjectURL(blob));
     setProcessing(false);
   }
 
