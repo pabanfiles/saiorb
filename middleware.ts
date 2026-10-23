@@ -2,9 +2,16 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+export const runtime = "edge";
+
 export function middleware(req: NextRequest) {
-  if (req.nextUrl.pathname.startsWith("/admin")) {
+  const path = req.nextUrl.pathname;
+
+  if (path.startsWith("/admin")) {
     const password = process.env.ADMIN_PASSWORD;
+
+    // Debug log (remove after fix)
+    console.log("ADMIN_PASSWORD exists:", !!password);
 
     if (!password) {
       return new NextResponse(
@@ -23,6 +30,7 @@ export function middleware(req: NextRequest) {
       });
     }
   }
+
   return NextResponse.next();
 }
 
