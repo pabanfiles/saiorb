@@ -11,16 +11,25 @@ export default function ImageToPdfTool() {
   async function convert() {
     if (files.length === 0) return;
     setProcessing(true);
-    const pdfDoc = await PDFDocument.create();
-    for (const file of files) {
-      const bytes = await file.arrayBuffer();
-      const img = file.type === "image/png" ? await pdfDoc.embedPng(bytes) : await pdfDoc.embedJpg(bytes);
-      const page = pdfDoc.addPage([img.width, img.height]);
-      page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+    try {
+      const pdfDoc = await PDFDocument.create();
+      for (const file of files) {
+        const bytes = await file.arrayBuffer();
+        const img = file.type === "image/png" 
+          ? await pdfDoc.embedPng(bytes) 
+          : await pdfDoc.embedJpg(bytes);
+        const page = pdfDoc.addPage([img.width, img.height]);
+        page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+      }
+      const pdfBytes = await pdfDoc.save();
+      // FIX: Cast Uint8Array to BlobPart for TypeScript
+      const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });
+      setPdfUrl(URL.createObjectURL(blob));
+    } catch (err) {
+      alert("Error converting images to PDF");
+    } finally {
+      setProcessing(false);
     }
-    const pdfBytes = await pdfDoc.save();
-const blob = new Blob([pdfBytes as unknown as BlobPart], { type: "application/pdf" });    setPdfUrl(URL.createObjectURL(blob));
-    setProcessing(false);
   }
 
   return (
