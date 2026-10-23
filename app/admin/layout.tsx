@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Wrench,
@@ -16,10 +16,12 @@ import {
   ArrowLeft,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
@@ -33,6 +35,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: "/admin/users", label: "Users & Roles (RBAC)", icon: Users },
   ];
 
+  async function handleLogout() {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+      router.push("/admin/login");
+      router.refresh();
+    } catch {
+      // Fallback
+      router.push("/admin/login");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col text-gray-900">
       {/* Top Admin Notice Bar */}
@@ -41,9 +54,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Shield className="w-4 h-4" />
           <span>SaiOrb Admin Control Center • Role: Super Administrator</span>
         </div>
-        <Link href="/" className="hover:underline flex items-center gap-1 font-medium">
-          <ArrowLeft className="w-3.5 h-3.5" /> Return to Main Site
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="hover:underline flex items-center gap-1 font-medium"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Return to Main Site
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1 hover:underline font-medium text-red-200 hover:text-white transition"
+          >
+            <LogOut className="w-3.5 h-3.5" /> Logout
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row">
@@ -96,6 +120,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               );
             })}
           </nav>
+
+          {/* Sidebar bottom logout */}
+          <div className="pt-4 mt-4 border-t border-gray-200">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-semibold text-red-600 hover:bg-red-50 transition"
+            >
+              <LogOut className="w-4 h-4 shrink-0" />
+              <span>Sign Out</span>
+            </button>
+          </div>
         </aside>
 
         {/* Main Content Area */}

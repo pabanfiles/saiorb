@@ -7,24 +7,17 @@ export const runtime = "experimental-edge";
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
-  if (path.startsWith("/admin")) {
-    const password = process.env.ADMIN_PASSWORD;
+  // Protect /admin routes (except /admin/login)
+  if (path.startsWith("/admin") && !path.startsWith("/admin/login")) {
+    const authCookie = req.cookies.get("admin_auth")?.value;
+    const expectedToken = process.env.ADMIN_PASSWORD
+      ? btoa(`admin:${process.env.ADMIN_PASSWORD}`)
+      : null;
 
-    if (!password) {
-      return new NextResponse(
-        "Admin not configured. Set ADMIN_PASSWORD environment variable.",
-        { status: 503 }
-      );
-    }
-
-    const auth = req.headers.get("authorization");
-    const expected = `Basic ${btoa(`admin:${password}`)}`;
-
-    if (auth !== expected) {
-      return new NextResponse("Unauthorized", {
-        status: 401,
-        headers: { "WWW-Authenticate": 'Basic realm="SaiOrb Admin"' },
-      });
+    // If not logged in, redirect to custom login page
+    if (!expectedToken || authCookie !== expectedToken) {
+      const loginUrl = new URL("/admin/login", req.url);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
@@ -32,5 +25,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: ["/admin/:path*"],
 };
