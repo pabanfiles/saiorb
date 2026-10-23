@@ -1,0 +1,6 @@
+{
+  "name": "SaiOrb - সব টুলস এক ঠিকানায়",
+  "description": "SaiOrb is an all-in-one Bengali web utility portal featuring 128 tools for PDF, Images, Videos, Social Media, Documents, Govt IDs, Utilities, and AI translation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

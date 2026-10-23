@@ -1,0 +1,10 @@
+// lib/db.ts
+import { createClient } from "@libsql/client/web";
+
+const url = process.env.TURSO_DATABASE_URL;
+const authToken = process.env.TURSO_AUTH_TOKEN;
+
+export const db = createClient({
+  url: url ?? "libsql://placeholder.turso.io",
+  authToken: authToken ?? "placeholder",
+});

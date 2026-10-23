@@ -1,0 +1,21 @@
+{
+  "name": "SaiOrb - All Tools in One Place",
+  "short_name": "SaiOrb",
+  "description": "128 powerful digital utility tools directly in your browser. 100% free and private.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/saiorbicon192/192/192",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://picsum.photos/seed/saiorbicon512/512/512",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
