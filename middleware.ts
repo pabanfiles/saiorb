@@ -2,16 +2,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export const runtime = "edge";
+export const runtime = "experimental-edge";
 
 export function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
   if (path.startsWith("/admin")) {
     const password = process.env.ADMIN_PASSWORD;
-
-    // Debug log (remove after fix)
-    console.log("ADMIN_PASSWORD exists:", !!password);
 
     if (!password) {
       return new NextResponse(
